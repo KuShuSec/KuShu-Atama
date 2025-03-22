@@ -346,7 +346,7 @@
           <node TEXT="GraphPython"></node>
           <node TEXT="Microsoft Graph"></node>
           <node TEXT="Azure AD Graph"></node>
-        /node>
+        </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
