@@ -26,7 +26,7 @@
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
-      <node TEXT="Device Join Abuse (Hybrid &amp; Azure AD Join)">
+      <node TEXT="Device Join Abuse (Hybrid & Azure AD Join)">
         <node TEXT="Offensive Tools">
           <node TEXT="AADInternals"></node>
           <node TEXT="ROADtools"></node>
@@ -35,7 +35,7 @@
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
-      <node TEXT="Device Compliance &amp; Conditional Access Abuse">
+      <node TEXT="Device Compliance & Conditional Access Abuse">
         <node TEXT="Offensive Tools">
           <node TEXT="AADInternals"></node>
           <node TEXT="TokenTactics"></node>
@@ -108,7 +108,7 @@
       </node>
       <node TEXT="Golden SAML">
         <node TEXT="Offensive Tools">
-          <node TEXT="ADFSDump &amp; ADFSpoof"></node>
+          <node TEXT="ADFSDump & ADFSpoof"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
