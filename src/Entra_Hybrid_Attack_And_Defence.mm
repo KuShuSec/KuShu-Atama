@@ -94,7 +94,9 @@
         <node TEXT="Detection Sources"></node>
       </node>
       <node TEXT="Dynamic Consent Abuse">
-        <node TEXT="Offensive Tools and LOLBAS"></node>
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="ROADtools"></node>
+        </node>
         <node TEXT="Preventative Controls (Hardening)">          
           <node TEXT="Maester"></node>
         </node>
@@ -143,7 +145,7 @@
           <node TEXT="Certify"></node> 
         </node>
         <node TEXT="Preventative Controls (Hardening)">
-        <node TEXT="Locksmith"></node>
+          <node TEXT="Locksmith"></node>
         </node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
@@ -339,7 +341,7 @@
         <node TEXT="Detection Sources"></node>
       </node>
       <node TEXT="Fake Device Join">
-        <node TEXT="Offensive Tools and LOLBAS"><
+        <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="AADInternals"></node>
           <node TEXT="ROADtools"></node>
           <node TEXT="GraphRunner"></node>
