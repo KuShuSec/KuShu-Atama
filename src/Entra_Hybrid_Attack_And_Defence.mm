@@ -20,7 +20,6 @@
       <node TEXT="Illicit OAuth Consent Grants">
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="ROADtools"></node>
-          <node TEXT="PowerZure"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
@@ -213,7 +212,6 @@
       <node TEXT="OAuth App Consent Abuse">
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="MicroBurst"></node>
-          <node TEXT="PowerZure"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
