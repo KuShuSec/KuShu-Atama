@@ -13,7 +13,9 @@
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="AADInternals"></node>
         </node>
-        <node TEXT="Preventative Controls (Hardening)"></node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Maester"></node>
+        </node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
@@ -25,7 +27,7 @@
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
-      <node TEXT="Device Join Abuse (Hybrid and Azure AD Join)">
+      <node TEXT="Device Join Abuse (Hybrid and Emtra Join)">
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="AADInternals"></node>
           <node TEXT="ROADtools"></node>
@@ -34,10 +36,11 @@
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
-      <node TEXT="Device Compliance and Conditional Access Abuse">
+      <node TEXT="Device Compliance Abuse">
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="AADInternals"></node>
           <node TEXT="TokenTactics"></node>
+          <node TEXT="TokenTacticsV2"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
@@ -47,7 +50,9 @@
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="AADInternals"></node>
         </node>
-        <node TEXT="Preventative Controls (Hardening)"></node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Maester"></node>
+        </node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
@@ -61,20 +66,38 @@
         <node TEXT="Detection Sources"></node>
       </node>
       <node TEXT="Redirect URL Hijack">
-        <node TEXT="Offensive Tools and LOLBAS"></node>
-        <node TEXT="Preventative Controls (Hardening)"></node>
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Azure AD Graph"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Maester"></node>
+        </node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
       <node TEXT="Bring Your Own Vulnerable App">
-        <node TEXT="Offensive Tools and LOLBAS"></node>
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Azure AD Graph"></node>
+        </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
       <node TEXT="Dynamic Consent Abuse">
         <node TEXT="Offensive Tools and LOLBAS"></node>
-        <node TEXT="Preventative Controls (Hardening)"></node>
+        <node TEXT="Preventative Controls (Hardening)">          
+          <node TEXT="Maester"></node>
+        </node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
@@ -83,6 +106,7 @@
       <node TEXT="Pass-the-Hash">
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="Mimikatz"></node>
+          <node TEXT="Pypykatz"></node>
           <node TEXT="Impacket"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
@@ -107,7 +131,8 @@
       </node>
       <node TEXT="Golden SAML">
         <node TEXT="Offensive Tools and LOLBAS">
-          <node TEXT="ADFSDump and ADFSpoof"></node>
+          <node TEXT="ADFSDump"></node>
+          <node TEXT="ADFSpoof"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
@@ -115,9 +140,11 @@
       </node>
       <node TEXT="AD CS Misconfiguration (Golden Certificate)">
         <node TEXT="Offensive Tools and LOLBAS">
-          <node TEXT="Certify"></node>
+          <node TEXT="Certify"></node> 
         </node>
-        <node TEXT="Preventative Controls (Hardening)"></node>
+        <node TEXT="Preventative Controls (Hardening)">
+        <node TEXT="Locksmith"></node>
+        </node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
@@ -126,6 +153,7 @@
       <node TEXT="Golden Ticket">
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="Mimikatz"></node>
+          <node TEXT="Pypykatz"></node>
           <node TEXT="Rubeus"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
@@ -140,7 +168,7 @@
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
-      <node TEXT="Malicious Certificate Based Authentication">
+      <node TEXT="Certificate Based Authentication Abuse">
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="AADInternals"></node>
         </node>
@@ -152,6 +180,10 @@
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="AADInternals"></node>
           <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Azure AD Graph"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
@@ -162,14 +194,12 @@
           <node TEXT="Family Of Client IDs (FOCI)">
             <node TEXT="AADInternals"></node>
             <node TEXT="ROADtools"></node>
+            <node TEXT="GraphRunner"></node>
+            <node TEXT="GraphPython"></node>
+            <node TEXT="Microsoft Graph"></node>
+            <node TEXT="Azure AD Graph"></node>
           </node>
         </node>
-        <node TEXT="Preventative Controls (Hardening)"></node>
-        <node TEXT="Preventative Tools"></node>
-        <node TEXT="Detection Sources"></node>
-      </node>
-      <node TEXT="Application Administrator Abuse">
-        <node TEXT="Offensive Tools and LOLBAS"></node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
@@ -183,6 +213,7 @@
       <node TEXT="T0 Equivalent API Permissions Abuse">
         <node TEXT="Offensive Tools and LOLBAS"></node>
         <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Maester"></node>
           <node TEXT="Restrict and Audit Use of Scopes">
             <node TEXT="Directory.ReadWrite.All"></node>
             <node TEXT="RoleManagement.ReadWrite.Directory"></node>
@@ -195,7 +226,9 @@
       </node>
       <node TEXT="OverPermissioned Application Scopes">
         <node TEXT="Offensive Tools and LOLBAS"></node>
-        <node TEXT="Preventative Controls (Hardening)"></node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Maester"></node>
+        </node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
@@ -226,7 +259,14 @@
         <node TEXT="Detection Sources"></node>
       </node>
       <node TEXT="Hidden Client Secrets (App Reg - API only CRUD)">
-        <node TEXT="Offensive Tools and LOLBAS"></node>
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Azure AD Graph"></node>
+        </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
@@ -237,14 +277,23 @@
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
-      <node TEXT="offline_access scope (Refresh Token Abuse)">
-        <node TEXT="Offensive Tools and LOLBAS"></node>
+      <node TEXT="Refresh Token Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Azure AD Graph"></node>
+        </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
       </node>
-      <node TEXT="Temporary Access Pass">
-        <node TEXT="Offensive Tools and LOLBAS"></node>
+      <node TEXT="Temporary Access Pass Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="ROADrecon"></node>
+        </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
@@ -262,6 +311,11 @@
       <node TEXT="ROPC (Legacy Auth Exploitation - No MFA)">
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Azure AD Graph"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
@@ -285,13 +339,14 @@
         <node TEXT="Detection Sources"></node>
       </node>
       <node TEXT="Fake Device Join">
-        <node TEXT="Offensive Tools and LOLBAS"></node>
-        <node TEXT="Preventative Controls (Hardening)"></node>
-        <node TEXT="Preventative Tools"></node>
-        <node TEXT="Detection Sources"></node>
-      </node>
-      <node TEXT="Incomplete Logging">
-        <node TEXT="Offensive Tools and LOLBAS"></node>
+        <node TEXT="Offensive Tools and LOLBAS"><
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Azure AD Graph"></node>
+        /node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
         <node TEXT="Detection Sources"></node>
@@ -311,7 +366,7 @@
       <node TEXT="Orchestration Frameworks">
         <node TEXT="Offensive Tools and LOLBAS">
           <node TEXT="Cobalt Strike"></node>
-          <node TEXT="Mythic Framework"></node>
+          <node TEXT="Mythic C2"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
@@ -321,8 +376,13 @@
     <node TEXT="Reconnaissance">
       <node TEXT="Unauthenticated">
         <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Azure AD Graph"></node>
           <node TEXT="OIDC.well-known">
-            <node TEXT="Curl/Postman/BurpSuite"></node>
           </node> 
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
@@ -331,14 +391,12 @@
       </node>
       <node TEXT="Authenticated">
         <node TEXT="Offensive Tools and LOLBAS">
-          <node TEXT="Azure AD graph">
-            <node TEXT="AADInternals"></node>
-            <node TEXT="ROADrecon"></node>
-          </node> 
-          <node TEXT="Microsoft Graph">
-            <node TEXT="AADInternals"></node>
-            <node TEXT="ROADrecon"></node>
-          </node>
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Azure AD Graph"></node>
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
