@@ -382,8 +382,7 @@
           <node TEXT="GraphPython"></node>
           <node TEXT="Microsoft Graph"></node>
           <node TEXT="Azure AD Graph"></node>
-          <node TEXT="OIDC.well-known">
-          </node> 
+          <node TEXT="OIDC.well-known"></node> 
         </node>
         <node TEXT="Preventative Controls (Hardening)"></node>
         <node TEXT="Preventative Tools"></node>
