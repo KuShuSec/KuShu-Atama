@@ -1,6 +1,6 @@
 # KuShu-Atama
 
-**KuShu-Atama** is a visual mind map project designed to explore hybrid strategies in cybersecurity—specifically focusing on attack and defense models. This repository includes both source mind maps and generated artifacts in PDF and PNG formats for easy review and distribution.
+**KuShu-Atama** is a visual mind map project designed to explore strategies in cybersecurity—specifically focusing on attack and defense models. This repository includes both source mind maps and generated artifacts in PDF and PNG formats for easy review and distribution.
 
 ## 📁 Project Structure
 
