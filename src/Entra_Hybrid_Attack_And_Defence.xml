@@ -1,0 +1,1041 @@
+<map version="0.9.0">
+  <node TEXT="Entra Hybrid Attack And Defence">
+    <node TEXT="Initial Access">
+      <node TEXT="AiTM Phishing">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Evilginx2 (proxy steals credentials and session cookies), Modlishka, and Muraena - popular adversary-in-the-middle frameworks"></node>
+          <node TEXT="Abuse legitimate OIDC tools (e.g. custom reverse proxies, “EvilProxy” kits) to orchestrate AiTM phishing."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Enforce phishing-resistant MFA (FIDO2, Windows Hello for Business, or certificate-based auth)"></node>
+          <node TEXT="Enable mfa fatigue protection such as number matching and additional context so users cannot be tricked by endless prompts"></node>
+          <node TEXT="Implement Conditional Access policies to block legacy auth and require MFA for risky login locations."></node>
+          <node TEXT="Consider Continuous Access Evaluation so stolen tokens get invalidated quickly on risk events."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Email Security: Block phishing emails and known AiTM kits."></node>
+          <node TEXT="CASB: Monitor unusual session patterns (impossible travel, atypical MFA claims)."></node>
+          <node TEXT="EDR: Can detect browser credential theft attempts."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Microsoft 365 Defender cross-domain alerts identify cookie theft and reuse (e.g. 'Stolen session cookie was used' alert)"></node>
+          <node TEXT="Entra sign-in logs can reveal anomalous session usage (same Session ID used from different locations) if correlated via linkable identifiers"></node>
+          <node TEXT="Gap: Entra Identity Protection alone doesn't flag AiTM token replay (looks like normal sign-in) without cross-product telemetry."></node>
+          <node TEXT="New linkable session ID (SID) in Entra ID logs helps tie together all tokens from one authentication session, making it easier to spot a stolen session cookie reused elsewhere"></node>
+          <node TEXT="The Authentication Methods activity preview can reveal suspicious MFA changes (attackers adding a new MFA method post-phish), which aids persistence detection."></node>
+        </node>
+      </node>
+      <node TEXT="Device Code Flow Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals and TokenTactics can programmatically initiate the device code flow and capture tokens (TokenTactics will wait for a user to enter the code and then grab the token)"></node>
+          <node TEXT="Attackers may also simply use Azure CLI (az login --use-device-code) or PowerShell to generate a device code URL, leveraging these legitimate tools to conduct the attack."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Maester"></node>
+          <node TEXT="Disable device code flow for users if not needed (CA policy to block Device Code flow or scope it tightly)."></node>
+          <node TEXT="Educate users that device login codes should only be entered into Microsoft's legitimate device login page."></node>
+          <node TEXT="Require MFA even on device code flow (Conditional Access can treat device code sign-ins as requiring compliant device or MFA if possible)."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Conditional Access (Authentication flows condition) - block or restrict Device Code flow usage tenant-wide"></node>
+          <node TEXT="Use SIEM to detect patterns (e.g. spike in device code logins)."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Entra sign-in logs (interactive user sign-ins via device code appear in logs with 'DeviceAuth' grant)."></node>
+          <node TEXT="SIEM/SOAR can be used to hunt for multiple Device Code authentications or unusual client app usage."></node>
+          <node TEXT="These authentications look like legitimate user logins, so out-of-the-box alerts are rare - requires monitoring of audit logs for unexpected usage."></node>
+        </node>
+      </node>
+      <node TEXT="Illicit OAuth Consent Grants">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Attackers often create a malicious multi-tenant app and send the OAuth consent link to users (no special tool needed beyond a crafted URL)."></node>
+          <node TEXT="Tools like ROADtools can be used to automate token handling after consent."></node>
+          <node TEXT="In some cases, custom phishing frameworks facilitate the OAuth consent scam by mimicking the Microsoft consent screen."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Disable user consent for most apps - use admin consent workflow so that users cannot grant permissions to unvetted apps."></node>
+          <node TEXT="If user consent must be allowed, limit it to low-permission scopes and require admin approval for any high-impact permission."></node>
+          <node TEXT="Encourage use of Publisher Verification (so users see a verified publisher badge) and leverage Entra consent policies (e.g. block consent to unverified apps or to certain sensitive permissions)."></node>
+          <node TEXT="Regularly audit enterprise applications and remove any unnecessary or suspicious ones."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="CASB - monitors OAuth apps and can flag risky or rare apps."></node>
+          <node TEXT="Entra Identity Protection will flag known malicious app consent if Microsoft has threat intelligence (and risky OAuth app policies can be configured)."></node>
+          <node TEXT="There are also scripts (PowerShell/Graph) to enumerate consents for review (e.g., Office 365 IT Pros scripts)."></node>
+          <node TEXT="Maester"></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Entra Audit Logs record user consent events (look for 'Consent to application' entries)"></node>
+          <node TEXT="CASB can alert on OAuth apps with unusual privileges or multiple user consents"></node>
+          <node TEXT="Gap: If a single user consents to a malicious app and the app's activity blends in with normal API calls, it may not trigger immediate alerts without specific monitoring."></node>
+        </node>
+      </node>
+      <node TEXT="Device Join Abuse (Hybrid and Emtra Join)">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals can simulate device registration via Graph API using a compromised user token."></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="ROADtools and custom Graph scripts can create device objects if the account has the device enrollment permission."></node>
+          <node TEXT="In many cases, attackers abuse normal APIs (Microsoft Graph or legacy AD join interfaces), so there's no special 'exploit tool' needed beyond scripting the device join with stolen credentials."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Restrict device join rights - e.g. set “Users may join devices to Entra” to None or a limited group."></node>
+          <node TEXT="Reduce the default limit of 50 devices per user (set it to 0 for most users who should not join devices)."></node>
+          <node TEXT="Use Entra Privileged Identity Management for the Global Administrator or Intune roles that can join or register devices on others' behalf."></node>
+          <node TEXT="If hybrid join, secure the Entra Connect configuration to prevent unauthorized writes."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="MDM enrollment restrictions - ensure only authorized users or managed processes can register devices."></node>
+          <node TEXT="Entra device governance (no native tool, but you can script checks for bulk device joins)."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Entra Audit Logs show new device registrations (including who registered and device details)."></node>
+          <node TEXT="Unusual patterns (e.g. a new device join by a user who already has a joined device, or joins outside normal IT processes) should be investigated."></node>
+          <node TEXT="In hybrid cases, monitor on-premises AD for unexpected computer object creations."></node>
+          <node TEXT="Gap: If an attacker uses a compromised account that is allowed to join devices, the event appears legitimate unless reviewed."></node>
+        </node>
+      </node>
+      <node TEXT="Device Compliance Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals (and similar frameworks) can manipulate device compliance via the Graph API - for instance, an attacker with the right role could call the API to mark a device as compliant"></node>
+          <node TEXT="Tools like TokenTactics(and V2) and custom PowerShell can also interface with Intune's API to acquire a token and update compliance status. Essentially, attackers misuse legitimate Graph calls to fake compliance."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Tie compliance to something that's hard to fake. For example, require a compliance check that involves device attestation or a TPM-backed signal, not just a simple policy flag."></node>
+          <node TEXT="use conditional access requiring both “compliant” and “Hybrid Entra joined” (or a domain joined requirement) - this makes it much harder to spoof with just a flipped compliance flag."></node>
+          <node TEXT="Limit which accounts can manage Intune compliance policies."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Microsoft Defender for Endpoint (MDE) integration - use device risk signals in Conditional Access."></node>
+          <node TEXT="If a device is not truly healthy (even if marked compliant), EDR can flag it as risky and isolate it - if using MDE, it can make CA block it."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Intune compliance logs - track when a device's compliance status changes (who marked it compliant, and did it happen without the usual checks?)."></node>
+          <node TEXT="Entra sign-in logs will show a previously non-compliant device suddenly being treated as compliant in Conditional Access decisions."></node>
+          <node TEXT="Gap: An attacker with Intune admin rights could flip compliance on a device; this administrative action might only be in audit logs and not raise an immediate alert."></node>
+        </node>
+      </node>
+      <node TEXT="Password Spraying">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals (PowerShell module) includes password spray functions."></node>
+          <node TEXT="MailSniper is an open-source tool that can spray credentials against Exchange/O365 endpoints."></node>
+          <node TEXT="MSOLSpray and similar scripts specifically target Entra/M365."></node>
+          <node TEXT="Attackers may also use generic tooling like Burp or Hydra against exposed endpoints - or even legitimate Outlook Web Access pages - making the activity blend in with normal traffic."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Maester"></node>
+          <node TEXT="Disable legacy authentication protocols - many password sprays target SMTP, IMAP, etc., which bypass MFA. Blocking legacy auth in Conditional Access thwarts this common tactic"></node>
+          <node TEXT="Enforce MFA for all users, so a sprayed password alone isn't sufficient to breach."></node>
+          <node TEXT="Use strong, unique passwords or passphrases to reduce success probability."></node>
+          <node TEXT="Monitor and limit failed login attempts - Entra's smart lockout is on by default (locks out attacker while not impacting the real user)."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Entra Smart Lockout - automatically blocks further attempts from an IP after a threshold of failed logins (tuned to distinguish legitimate users vs attackers)."></node>
+          <node TEXT="Entra Identity Protection - can pre-empt known bad addresses (e.g., those on known malicious IP lists) and impose risk-based policies (like requiring MFA or blocking if risk is high)."></node>
+          <node TEXT="For on-prem AD, enable AD FS Extranet Lockout if applicable (to protect against password spray via federated endpoints)."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Entra sign-in logs - detect the pattern of a single IP attempting logins for many different accounts (horizontal spray) or many passwords against one account (vertical guessing)."></node>
+          <node TEXT="On-premises AD (if federated or in hybrid scenarios) can trigger Defender for Identity brute-force alerts - for example, a massive number of LDAP simple bind failures will trigger a brute force alert. You can emulate in your SIEM/SOAR."></node>
+          <node TEXT="Entra Identity Protection also flags “Password spray risk” in some cases (look for risk events like “unusual behavior” or sign-in from anonymized IP)."></node>
+          <node TEXT="Leverage user and signin risk information in Entra sign-in logs in your detections even if you are not licensed for risk based conditional access policies for realtime enforcement."></node>
+        </node>
+      </node>
+      <node TEXT="Entra Connect Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals can extract AD Connect credentials (it has a Get-AADIntSyncCredentials function)."></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="The adconnectdump tool by Dirk-jan Mollema is a public tool that dumps and decrypts Entra Connect's database to retrieve plaintext credentials."></node>
+          <node TEXT="Attackers with admin access to the server might also use Mimikatz or custom DLL injection to extract the encrypted creds and decrypt them. Once obtained, those credentials (for on-prem AD and Entra service account) are leveraged to escalate privileges in AD or cloud."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Use a gMSA (Group Managed Service Account) for the AD DS connector account for Entra Connect, so that even if the database is stolen, the AD credential can't be easily reused outside that server."></node>
+          <node TEXT="Strictly limit who can log on to or administer the AD Connect server (Tier 0 system)."></node>
+          <node TEXT="Keep Entra Connect updated (to patch any known vulnerabilities in it)."></node>
+          <node TEXT="If feasible, use Entra Cloud Sync (which has a lightweight agent and might reduce attack surface)."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="EDR on the Entra Connect server - e.g. EDR can detect Mimikatz or DCSync behavior, possibly catching tools trying to dump the Entra Connect credentials."></node>
+          <node TEXT="No dedicated Microsoft cloud tool monitors Entra Connect for credential abuse;  treat this server as a domain controller equivalent in monitoring."></node>
+          <node TEXT="Entra Connect Health (while it monitors sync health) does not detect credential extraction."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Unusual behavior by the Entra Connect sync account or server."></node>
+          <node TEXT="On-prem AD event logs might show the Entra Connect service account performing atypical actions (if attacker uses those creds elsewhere)."></node>
+          <node TEXT="Entra audit logs could show the sync account signing in interactively (which it normally shouldn't) or changes to directory sync configuration."></node>
+          <node TEXT="Gap: Extracting credentials from the AD Connect server's database or memory may not trigger any log - detection hinges on catching subsequent misuse of those creds or irregular access on the server itself."></node>
+        </node>
+      </node>
+      <node TEXT="Redirect URL Hijack">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Attackers often don't need a special tool - they register a malicious app in Entra and supply a redirect URI that an existing target app is vulnerable to (or an open redirect that ultimately points to them). In some cases, they exploit a vulnerable third-party app that allows arbitrary redirect URIs. Tools like custom Python scripts or Burp Suite help identify open redirect vulnerabilities, but the core of the attack is abusing legitimate OAuth behavior with cleverly chosen URLs."></node>
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Entra Graph"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Never use wildcards in redirect URIs. Register only specific, trusted redirect URLs for your apps."></node>
+          <node TEXT="Implement OAuth PKCE (Proof Key for Code Exchange) for public clients - this binds the auth code to the original client, so even if an attacker hijacks a redirect and steals a code, they cannot exchange it without the code verifier."></node>
+          <node TEXT="If possible, mark your app as single-tenant if it doesn't need multi-tenant access, so no one else can spoof it in another tenant."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Application Governance/Code Review - ensure all OAuth apps in the tenant (especially multi-tenant apps) have properly locked-down redirect URIs."></node>
+          <node TEXT="Entra will enforce HTTPS and explicit URI matching (which helps)."></node>
+          <node TEXT="A web application firewall (WAF) could mitigate some open redirect scenarios on your app domain that could facilitate this."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Notoriously hard to detect. If successfully exploited, Entra issues an auth code or token to what it believes is a valid redirect URI. There may be no obvious error - from Entra's perspective, the user authenticated to the app. Only careful review of application manifest or sign-in traces would show a token sent to an unexpected endpoint."></node>
+          <node TEXT="Gap: No built-in Entra alert exists for this scenario; detection relies on catching unusual redirect URIs during app registrations or an unexpected app receiving tokens."></node>
+        </node>
+      </node>
+      <node TEXT="Bring Your Own Vulnerable App">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Entra Graph"></node>
+          <node TEXT="The attacker's 'tool' here might simply be an exploit script for the specific vulnerability. For example, if there's a known RCE or logic flaw in an identity provider, they'll use that."></node>
+          <node TEXT="They may also use standard tools to enumerate app configuration (ROADtools to pull tenant app settings, etc.) and identify misconfigurations."></node>
+          <node TEXT="Common utilities like Impacket or Postman can then be used to craft malicious SAML tokens or JWTs if the app's flaw allows it."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="atch and update all identity-related software (e.g., keep AD FS updated, apply any hotfixes for identity providers)."></node>
+          <node TEXT="Decommission legacy or unnecessary authentication endpoints - for example, if an old SAML IdP or OAuth endpoint is no longer needed, remove it so it cannot be leveraged."></node>
+          <node TEXT="Use defence-in-depth: even if an app is compromised, ensure that accounts have least privilege (so a flaw in an HR app's SSO can't grant global admin, for instance)."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Regular penetration testing and vulnerability scanning of identity components (on-prem and cloud apps)."></node>
+          <node TEXT="Some tools (Burp, ZAP) can be used on custom or third-party web apps used for SSO to catch common flaws."></node>
+          <node TEXT="If the vulnerable app is a known product (e.g., an outdated AD FS or custom SAML IdP), stay abreast of vendor patches and recommendations."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Monitor for signs of known exploits being used against your SSO or identity systems (e.g., if using a third-party federated IdP, watch its logs for errors or suspicious admin actions)."></node>
+          <node TEXT="Unfortunately, there's no unified log for 'someone exploited a flaw' - each app must be monitored."></node>
+          <node TEXT="Gap: If an attacker exploits an unpatched vulnerability in a self-deployed identity solution (AD FS, Shibboleth, etc.), it may not be obvious except perhaps through unexpected admin changes or abnormal tokens issued."></node>
+        </node>
+      </node>
+      <node TEXT="Dynamic Consent Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="ROADtools"></node>
+          <node TEXT="There isn't a specific tool for this; attackers leverage the normal OAuth flow. For instance, using a tool like MS Graph Explorer or a custom OAuth client, an attacker controlling an app can trigger a consent screen for additional permissions (when the user is already using the app). If the user is tricked into approving, the attacker's app gets elevated access."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">          
+          <node TEXT="Ideally, do not allow users to grant consent to new permissions for already-installed apps without governance."></node>
+          <node TEXT="If an application needs new permissions, have an admin review and consent rather than the user doing it impulsively."></node>
+          <node TEXT="Use Entra consent policy to require admin approval for any consent that includes high-privilege scopes, even if the app was previously consented for lesser scopes."></node>
+          <node TEXT="Regularly review application permissions - an app that suddenly has more scopes could be a red flag."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Maester (open-source tool) can check for risky settings - for instance, it can test if users are able to consent to apps that they shouldn't, or if any apps have unreviewed permissions."></node>
+          <node TEXT="Entra now also allows administrators to require re-confirmation or limit the ability for apps to request additional scopes after initial consent (through consent policies)."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Entra audit logs will show when a user or admin grants additional permissions to an app."></node>
+          <node TEXT="Incremental consent (where an OAuth app asks for new permissions on the fly) generates a new consent event."></node>
+          <node TEXT="Monitoring these events, especially for privileged apps, is key."></node>
+          <node TEXT="Gap: If users approve the prompt, it's a legitimate consent in Entra's view - distinguishing “dynamic consent abuse” from a normal user action is difficult without context."></node>
+        </node>
+      </node>
+    </node>
+    <node TEXT="Credential Theft">
+      <node TEXT="Pass-the-Hash">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Mimikatz is the classic tool to extract NTLM hashes from memory."></node>
+          <node TEXT="Pypykatz (Python variant) does similar."></node>
+          <node TEXT="The Impacket toolkit's utilities (e.g., wmiexec.py, smbexec.py) allow using a stolen hash to authenticate without knowing the plaintext password."></node>
+          <node TEXT="Attackers might also use built-in OS tools (like runas or wmic with appropriate flags) if they can inject the hash into a session."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Disable NTLM authentication in the domain where possible or restrict it severely (via Group Policy 'Network Security: Restrict NTLM …')"></node>
+          <node TEXT="Where NTLM is needed, enforce complex passwords and frequent rotation for accounts (to limit hash validity window)."></node>
+          <node TEXT="Implement unique local administrator passwords on endpoints (LAPS) so that one stolen local hash doesn't grant broad access."></node>
+          <node TEXT="Ensure privileged accounts never log on to workstations, to reduce chances their hashes can be stolen."></node>
+          <node TEXT="Get rid of AD!"></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Credential Guard on Windows 10/11 helps prevent hash extraction by isolating LSASS secrets."></node>
+          <node TEXT="EDR can detect Mimikatz or similar tools trying to scrape hashes from memory."></node>
+          <node TEXT="Additionally, Active Directory controls like SMB signing and LDAP signing make relay attacks (often paired with pass-the-hash) harder."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="AD Audit Logs: Correlate an account's NTLM logon from a new machine without prior Kerberos TGT as a 'suspected identity theft (Pass-the-Hash)'"></node>
+          <node TEXT="Domain Controller security logs (Event ID 4624 with Logon Type 3 or 9) can indicate NTLM logons; if an admin account logs in via NTLM from a workstation where it normally doesn't, that's suspicious."></node>
+          <node TEXT="Gap: Pure cloud environments aren't directly affected by NTLM, but hybrid attacks using on-prem hashes can indirectly impact cloud if AD is federated or synced."></node>
+        </node>
+      </node>
+      <node TEXT="Session Cookie Theft">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Evilginx2 (and similar AiTM proxies) essentially steal session cookies."></node>
+          <node TEXT="Malware on a device can directly steal browser cookies from disk."></node>
+          <node TEXT="Even without specialized malware, an attacker with an existing foothold might use built-in tools: e.g., dump browser memory via debugging APIs or use JavaScript in a XSS attack to grab a session token."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Shorten session lifetimes for sensitive apps - require re-login or MFA more frequently so stolen cookies expire sooner."></node>
+          <node TEXT="Use phishing-resistant MFA so even if cookies are stolen, they can't be refreshed easily (for instance, use FIDO2 which enforces re-auth on new device)."></node>
+          <node TEXT="Enable Continuous Access Evaluation (CAE) - so if an anomaly is detected (account disabled, password changed, risk flagged) the session cookie's access is cut off by resources quickly."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Browser Hardening/DLP: Deploying browser isolation or at least ensuring browsers are not storing persistent session cookies unencrypted can help."></node>
+          <node TEXT="Endpoint DLP or EDR can detect if cookie files are accessed in abnormal ways."></node>
+          <node TEXT="Entra Conditional Access can reduce cookie reuse by setting sign-in frequency (forcing reauthentication periodically)."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="CASB can detect impossible travel or session anomalies that often accompany cookie theft (e.g., a session cookie used from an unusual location triggers an alert)."></node>
+          <node TEXT="Microsoft 365 Defender will raise an alert if it observes known patterns of cookie replay (for instance, via its integrations with Edge or MCAS)"></node>
+          <node TEXT="Entra ID linkable Session ID (SID), which is in preview, can help incident responders connect two sign-in events with the same session cookie (one from victim's device, one from attacker's)"></node>
+          <node TEXT="Gap: If an attacker uses a stolen cookie from the same general location or in a short timeframe, it may appear as a normal session; real-time detection still remains challenging."></node>
+        </node>
+      </node>
+      <node TEXT="Pass-the-PRT">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="The attack is typically done with Mimikatz - its cloudap module can extract the PRT and session key from LSASS, and then convert them into a usable session token"></node>
+          <node TEXT="AADInternals also has capabilities to request tokens given a PRT (if certain keys are known)."></node>
+          <node TEXT="PowerShell script + Mimikatz to grab a PRT and then injected it into a browser session to impersonate the user."></node>
+          <node TEXT="Any tool that can read LSASS memory or the TPM-protected cache (with admin rights) could potentially be leveraged to steal or use a PRT"></node>
+          <node TEXT="MSAL Token cache locally on the device - not encrypted in all OS versions e.g. Linux - also Cloud Shell storage account."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Treat PRT compromise as you would a complete account takeover - so focus on prevention at the device level."></node>
+          <node TEXT="Don't allow users to be local admins on their Entra-joined devices (to prevent easy PRT theft via malware)."></node>
+          <node TEXT="Require compliant or hybrid-joined devices for sensitive applications; that way, a stolen PRT used from an attacker's device might fail conditional access if device compliance cannot be faked."></node>
+          <node TEXT="Rotate high-risk credentials (if a PRT theft is suspected, a user password reset and invalidation of refresh tokens will invalidate the PRT chain)."></node>
+          <node TEXT="Use CAE (Continuous Access Evaluation) so that certain events (user password change, device loss) invalidate the PRT and derived tokens quickly"></node>
+          <node TEXT="Employee token pinning, such as Token Protection (Preview) in Entra so that tokens are cryptographically bound to the device they are generated on."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Credential Guard (on Windows) and virtualization-based security make stealing the PRT much harder (though not impossible if the attacker has SYSTEM privileges, as some attacks have shown"></node>
+          <node TEXT="EDR can block or quarantine known PRT theft tools."></node>
+          <node TEXT="Hardware-backed attestation for PRT (currently, PRT is bound to device and user; ensuring the device has a TPM and is managed adds protection)."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="EDR may detect attempts to access the Primary Refresh Token in memory (for example, detect Mimikatz's sekurlsa::cloudap usage)"></node>
+          <node TEXT="This can trigger an alert that is also fed into Entra Identity Protection as a 'Possible attempt to access Primary Refresh Token (PRT)' risk event"></node>
+          <node TEXT="Entra Identity Protection by itself cannot see the theft, but it may flag downstream anomalous token usage (an 'Anomalous token' risk detection) if a PRT is replayed from an unfamiliar environment"></node>
+          <node TEXT="Gap: If the attacker uses the PRT from a device that appears compliant (e.g., simulating a device join), Entra sees a normal token; direct cloud-side detection of PRT replay is extremely difficult without the endpoint signal."></node>
+        </node>
+      </node>
+      <node TEXT="Golden SAML">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="ADFSDump (part of Mimikatz or a separate script) can extract the AD FS signing certificate and key if the attacker has admin on the AD FS server. "></node>
+          <node TEXT="ADFSpoof and other custom scripts can then generate SAML tokens for any user/role."></node>
+          <node TEXT="attacker might stand up a fake AD FS server with the stolen cert and use standard SAML libraries to authenticate as any user to the target service."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Secure AD FS servers as Tier 0 assets."></node>
+          <node TEXT="Limit administrative access and ensure they are patched (Golden SAML itself is not a product flaw but AD FS has had vulnerabilities that facilitate certificate theft)."></node>
+          <node TEXT="Regularly change the AD FS token-signing certificate (manually if not already periodically rolling) and tightly control its private key – store it on an HSM if possible"></node>
+          <node TEXT="Implement additional controls like monitoring for AD FS configuration drift (any new relying party trusts or claims transformations that are unusual)."></node>
+          <node TEXT="If feasible, enable Azure AD Conditional Access even on federated users for additional checks (like device or location filters that an attacker might trip even with a forged token)."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Enable Entra Federation Health (to detect some anomalies in federation)."></node>
+          <node TEXT="Enable auditing of AD FS configuration changes."></node>
+          <node TEXT="Consider SolarWinds-specific detections published by Microsoft and others (like scripts to see if token signing cert was changed or additional certs were added)"></node>
+          <node TEXT="Move to Pass-through Authentication/Password Hash Sync to remove AD FS if possible, or at least reduce its usage"></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Golden SAML attack is an IdP (AD FS) issuing a token that Entra trusts – it looks like a perfectly valid federated logon."></node>
+          <node TEXT="Monitor if the AD FS token-signing certificate is accessed or exported (Security Event 5136 on the AD FS container, etc.)."></node>
+          <node TEXT="Gap: This technique was used in the Solorigate attack specifically because it evades cloud detection – it’s extremely stealthy in Entra audit logs."></node>
+        </node>
+      </node>
+      <node TEXT="AD CS Misconfiguration (Golden Certificate)">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Certify and Certipy are well-known tools to find and exploit AD CS flaws. They can request certificates based on misconfigured templates (e.g., a template that allows any authenticated user to enroll for a cert that has Domain Admin rights)."></node>
+          <node TEXT="Once an attacker has a cert, they can use tools like Rubeus or Mimikatz to perform a Golden Ticket-like attack but with a certificate (sometimes called a 'Golden Certificate' attack, where they use the cert to sign Kerberos PAC data). Essentially, the attacker ends up with a certificate that can authenticate as a privileged user for an indefinite period."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Hardening AD CS is the primary defense: Follow Microsoft and SpecterOps guidance to fix misconfigurations – e.g., remove the ENROLL permission from vulnerable templates (like the infamous Machine* templates that allow any auth user to get a cert that could be used for domain auth)."></node>
+          <node TEXT="Disable NTLM fallback on certificate auth to force strict mapping (so a cert can’t be used unless explicitly mapped or issued by a trusted template)."></node>
+          <node TEXT="Implement short lifetimes and publication of issued certs so they can be monitored."></node>
+          <node TEXT="If possible, require multifactor for enrollment of sensitive certificates (AD CS can’t natively, but you can impose out-of-band procedures for certificate requests)."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="Certipy (offensive tool) has a scanning mode that can be used defensively to find misconfigured templates."></node>
+          <node TEXT="Locksmith tool can help apply recommended template hardening – it’s more a script than a continuous tool."></node>
+          <node TEXT="Enable Microsoft Defender for Identity’s AD CS monitoring (a preview feature as of late 2024) if available, which can detect some certificate abuse patterns."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Active Directory Certificate Services (AD CS) events and AD events can reveal this."></node>
+          <node TEXT="On the CA server, enable auditing for certificate issuance – an attacker requesting a certificate with elevated privileges (like a DC certificate or an Enrollment Agent certificate) will generate an event (e.g., Event 4886: Certificate Issued)."></node>
+          <node TEXT=" if an attacker uses a forged certificate to authenticate as a domain admin (via PKINIT), the Domain Controller logs an authentication event (Event 4768) indicating certificate authentication was used for that account."></node>
+          <node TEXT="MDI can sometimes detect abnormal certificate-to-account usage as part of 'PTT' detections (over-pass-the-hash scenarios)."></node>
+          <node TEXT="Gap: Many orgs don’t monitor their CA logs. If an attacker gets a long-lived cert for a user or even the KRBTGT account, they can silently abuse it for persistence with little trace except those initial issuance events."></node>
+        </node>
+      </node>
+    </node>
+    <node TEXT="Privilege Escalation and Lateral Movement">
+      <node TEXT="Golden Ticket">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Mimikatz and Pyoykatz can craft a Golden Ticket (kerberos::golden command) given a domain’s KRBTGT hash."></node>
+          <node TEXT="Rubeus (C# tool) can also forge tickets and inject them."></node>
+          <node TEXT="Impacket’s ticketer.py is another means to create Golden Tickets (and Silver Tickets) easily."></node>
+          <node TEXT="These tools allow the attacker to specify any user SID, groups (like Domain Admins SID), and a long lifetime – producing a TGT that gives them virtually unlimited access in that domain."></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Regularly reset the KRBTGT account password (typically every 180 days, twice in quick succession) so that any stolen KRBTGT hash becomes unusable in a timely manner."></node>
+          <node TEXT="Ensure all domain controllers are patched for known Kerberos vulnerabilities (like the ones that enable PAC spoofing – e.g., Silver Ticket related patches – these patches also help limit what a forged ticket can do)."></node>
+          <node TEXT="Implement ESAE ('Red Forest') or tiered admin model so that even if a Golden Ticket is created, the accounts that can be targeted are limited (the attacker usually still needs local admin on some system to use the ticket effectively)."></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT="There isn’t a specific tool to stop Golden Tickets once an attacker has KRBTGT – it’s about prevention and detection."></node>
+          <node TEXT="Using MDI (Defender for Identity) as a detection tool is crucial since it has several detections for Golden Ticket (encryption downgrade, abnormal tickets, etc.). "></node>
+          <node TEXT="Some third-party AD monitoring solutions (like Splunk with the right queries, or Quest Change Auditor) can catch anomalies in Kerberos tickets."></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT="Defender for Identity reliably detects Golden Ticket usage through multiple methods – e.g., it will alert if it sees a Kerberos TGT for a nonexistent user or one with abnormal encryption (External ID 2027 alert)."></node>
+          <node TEXT="Domain Controllers might log a Kerberos error if the ticket doesn’t match a valid user, but in many cases Golden Tickets use valid SIDs to fly under the radar."></node>
+          <node TEXT="Another indicator is a Kerberos TGT with an absurdly long lifetime (if attacker sets 10-year expiration); DCs don’t normally issue those, so any such ticket in event logs is suspect."></node>
+        </node>
+      </node>
+      <node TEXT="Silver Ticket">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Rubeus"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="Certificate Based Authentication Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="OAuth Token Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Entra Graph"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="1st Party App Consent Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Family Of Client IDs (FOCI)">
+            <node TEXT="AADInternals"></node>
+            <node TEXT="ROADtools"></node>
+            <node TEXT="GraphRunner"></node>
+            <node TEXT="GraphPython"></node>
+            <node TEXT="Microsoft Graph"></node>
+            <node TEXT="Entra Graph"></node>
+          </node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="Azure RBAC Abuse">
+        <node TEXT="Offensive Tools and LOLBAS"></node>
+        <node TEXT="Preventative Controls (Hardening)"></node>
+        <node TEXT="Preventative Tools"></node>
+        <node TEXT="Detection Sources"></node>
+      </node>
+      <node TEXT="T0 Equivalent API Permissions Abuse">
+        <node TEXT="Offensive Tools and LOLBAS"></node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Maester"></node>
+          <node TEXT="Restrict and Audit Use of Scopes">
+            <node TEXT="Directory.ReadWrite.All"></node>
+            <node TEXT="RoleManagement.ReadWrite.Directory"></node>
+            <node TEXT="AppRoleAssignment.ReadWrite.All"></node>
+            <node TEXT="UserAuthenticationMethod.ReadWrite.All (FIDO2/TAP Only)"></node>
+          </node>
+        </node> 
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="OverPermissioned Application Scopes">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT="Maester"></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+    </node>
+    <node TEXT="Persistence">
+      <node TEXT="Adding Rogue Federation Trusts">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="OAuth App Consent Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="MicroBurst"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="MFA Fatigue">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Evilginx2"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="Hidden Client Secrets (App Reg - API only CRUD)">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Entra Graph"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="User Managed Identity Federation">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="Refresh Token Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Entra Graph"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="Temporary Access Pass Abuse">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="ROADrecon"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+    </node>
+    <node TEXT="Evasion">
+      <node TEXT="MFA Fatigue">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Evilginx2"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="ROPC (Legacy Auth Exploitation - No MFA)">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Entra Graph"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="Fake MFA">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="External Authentication Methods">
+            <node TEXT="ROADoidc"></node>
+          </node> 
+          <node TEXT="Silver Ticket"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="Fake Compliant Device">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="Fake Device Join">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Entra Graph"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+    </node>
+    <node TEXT="Multi-stage Attack Chaining">
+      <node TEXT="Attack Path Mapping">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="BloodHound"></node>
+          <node TEXT="AzureHound"></node>
+          <node TEXT="ROADtools"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="Orchestration Frameworks">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="Cobalt Strike"></node>
+          <node TEXT="Mythic C2"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+    </node>
+    <node TEXT="Reconnaissance">
+      <node TEXT="Unauthenticated">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Entra Graph"></node>
+          <node TEXT="OIDC.well-known"></node> 
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+      <node TEXT="Authenticated">
+        <node TEXT="Offensive Tools and LOLBAS">
+          <node TEXT="AADInternals"></node>
+          <node TEXT="ROADtools"></node>
+          <node TEXT="GraphRunner"></node>
+          <node TEXT="GraphPython"></node>
+          <node TEXT="Microsoft Graph"></node>
+          <node TEXT="Entra Graph"></node>
+        </node>
+        <node TEXT="Preventative Controls (Hardening)">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Preventative Tools">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+        <node TEXT="Detection Sources">
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+          <node TEXT=""></node>
+        </node>
+      </node>
+    </node>
+  </node>
+</map>
