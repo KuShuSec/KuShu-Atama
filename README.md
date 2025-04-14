@@ -19,7 +19,7 @@ KuShu-Atama/
 
 ## 🧠 Description
 
-The core content is a detailed mind map of hybrid attack and defense strategies within Microsoft Entra environments (formerly Azure AD). It serves as an educational and planning resource for:
+The core content is a detailed mind map of attack and defense strategies within Microsoft Entra environments (formerly Azure AD). It serves as an educational and planning resource for:
 
 - Security professionals designing layered defenses
 - Threat analysts modeling attack surfaces
