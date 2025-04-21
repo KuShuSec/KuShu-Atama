@@ -1,6 +1,6 @@
 # KuShu-Atama
 
-**KuShu-Atama** is a visual mind map project designed to explore hybrid strategies in cybersecurity—specifically focusing on attack and defense models. This repository includes both source mind maps and generated artifacts in PDF and PNG formats for easy review and distribution.
+**KuShu-Atama** is a visual mind map project designed to explore strategies in cybersecurity—specifically focusing on attack and defense models. This repository includes both source mind maps and generated artifacts in PDF and PNG formats for easy review and distribution.
 
 ## 📁 Project Structure
 
@@ -19,7 +19,7 @@ KuShu-Atama/
 
 ## 🧠 Description
 
-The core content is a detailed mind map of hybrid attack and defense strategies within Microsoft Entra environments (formerly Azure AD). It serves as an educational and planning resource for:
+The core content is a detailed mind map of attack and defense strategies within Microsoft Entra environments (formerly Azure AD). It serves as an educational and planning resource for:
 
 - Security professionals designing layered defenses
 - Threat analysts modeling attack surfaces
