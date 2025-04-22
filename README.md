@@ -47,7 +47,7 @@ This model aligns with Zero Trust principles and includes implementation insight
 
 - Open `.mm` files in [SimpleMind](https://simplemind.eu) or [FreeMind](http://freemind.sourceforge.net/wiki/index.php/Main_Page)
 - Open `.smmx` files in [SimpleMind](https://simplemind.eu)
-- For Entra Attack & Defend mind map visuals: imoort to SimpleMind and set diagram type to **Radial**
+- For Entra Attack & Defend mind map visuals: import to SimpleMind and set diagram type to **Radial**
 - For matrix visuals: import to SimpleMind and set diagram type to **Matrix**
 - Refer to the `/artifacts` folder for exported, share-ready diagrams in PDF/PNG format
 
