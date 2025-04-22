@@ -1,5 +1,5 @@
 ﻿<map version="0.9.0">
-  <node TEXT="M365 BreakGlass Maturity&#10;&#10;KuShuSec v1.1">
+  <node TEXT="M365 BreakGlass Maturity Model&#10;&#10;GitHub.com/KuShuSec v1.1">
     <node TEXT="Unprepared">
       <node TEXT="No breakglass account or app."></node>
       <node TEXT="No documented recovery process."></node>
@@ -13,19 +13,19 @@
       <node TEXT="Offline credentials (e.g., passphrase or&#10;QR) stored in secure location."></node>
     </node>
     <node TEXT="Baseline Hygiene">
-      <node TEXT="Breakglass account excluded&#10;from Conditional Access and&#10;monitored with alerting."></node>
       <node TEXT="App secrets tracked manually; redirect&#10;URIs reviewed occasionally."></node>
-      <node TEXT="Some use of PIM for privileged roles."></node>
+      <node TEXT="Some use of PIM for&#10;privileged roles."></node>
       <node TEXT="App Admin role assignments&#10;starting to be reduced."></node>
+      <node TEXT="Breakglass CA exclusions are tightly scoped &#x2014; only&#10;exclude policies that may block emergency recovery&#10;(e.g. device state), but maintain sign-in risk or location&#10;checks where feasible."></node>
     </node>
     <node TEXT="Controlled">
       <node TEXT="Application Admin role only&#10;PIM-eligible with approval workflows."></node>
       <node TEXT="Privileged role assignments&#10;reviewed via Access Reviews."></node>
-      <node TEXT="Consent grants require admin approval."></node>
+      <node TEXT="Consent grants require&#10;admin approval."></node>
       <node TEXT="Breakglass account uses&#10;FIDO2/passkey backed MFA."></node>
       <node TEXT="Secrets have defined expiry; basic&#10;automation for renewal exists."></node>
-      <node TEXT="Redirect URIs are strictly scoped."></node>
-      <node TEXT="Monitoring for service principal logins is in place."></node>
+      <node TEXT="Redirect URIs are&#10;strictly scoped."></node>
+      <node TEXT="Monitoring for service&#10;principal logins is in place."></node>
     </node>
     <node TEXT="Secure by Design">
       <node TEXT="All workload identities use Workload&#10;Identity Federation (WIF)."></node>
@@ -36,6 +36,7 @@
       <node TEXT="Recovery procedures are&#10;documented, tested quarterly."></node>
       <node TEXT="Breakglass application&#10;exists with clear scoping."></node>
       <node TEXT="Adversary emulation (e.g., purple team)&#10;used to validate response."></node>
+      <node TEXT="Recovery planning accounts for&#10;Microsoft service outages,&#10;misconfigurations, and attacker&#10;scenarios."></node>
     </node>
     <node TEXT="Automated &amp; Resilient">
       <node TEXT="Entire breakglass app process is&#10;policy-as-code, version-controlled."></node>
@@ -49,6 +50,7 @@
       <node TEXT="Red tenant identity has&#10;just-in-time access into primary&#10;tenant via B2B or B2B Direct."></node>
       <node TEXT="Red tenant identity protected with&#10;independent security stack."></node>
       <node TEXT="Offline access credential backup exists&#10;(QR code, physical token, etc)."></node>
+      <node TEXT="Breakglass identity or app optionally backed by&#10;alternate identity provider or tenant to avoid&#10;dependency on primary cloud platform."></node>
     </node>
   </node>
 </map>
