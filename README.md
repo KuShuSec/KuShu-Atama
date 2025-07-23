@@ -81,7 +81,7 @@ It’s not a maturity ladder, but a cautionary map of what *not* to do -- based 
 ## 🙏 Acknowledgements
 
 Huge thanks to the security community for contributions, feedback, and field horrors.  
-Special thanks to: David Sass (@sassdawe) and Kay Daskalakis @kaydaskalakis) who helped refine the models through shared insights.
+Special thanks to: David Sass (@sassdawe) and Kay Daskalakis (@kaydaskalakis) who helped refine the models through shared insights.
 
 ---
 
